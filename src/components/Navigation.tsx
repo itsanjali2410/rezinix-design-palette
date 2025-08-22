@@ -1,15 +1,19 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation();
+  const isHomePage = location.pathname === '/';
 
   const navItems = [
-    { name: "Products", href: "#products" },
-    { name: "Solutions", href: "#solutions" },
-    { name: "About", href: "#about" },
-    { name: "Contact Us", href: "#contact" },
+    { name: "Products", href: isHomePage ? "#products" : "/#products", isAnchor: isHomePage },
+    { name: "Solutions", href: isHomePage ? "#solutions" : "/#solutions", isAnchor: isHomePage },
+    { name: "About", href: "/about", isAnchor: false },
+    { name: "Careers", href: "/careers", isAnchor: false },
+    { name: "Contact", href: isHomePage ? "#contact" : "/#contact", isAnchor: isHomePage },
   ];
 
   return (
@@ -18,22 +22,32 @@ const Navigation = () => {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <div className="flex items-center">
+            <Link to="/" className="flex items-center">
               <span className="text-2xl font-bold text-primary">rezinix.AI</span>
-            </div>
+            </Link>
           </div>
 
           {/* Desktop Navigation */}
           <div className="hidden md:block">
             <div className="ml-10 flex items-baseline space-x-8">
               {navItems.map((item) => (
-                <a
-                  key={item.name}
-                  href={item.href}
-                  className="text-foreground hover:text-primary px-3 py-2 text-sm font-medium transition-colors duration-200 hover-lift"
-                >
-                  {item.name}
-                </a>
+                item.isAnchor ? (
+                  <a
+                    key={item.name}
+                    href={item.href}
+                    className="text-foreground hover:text-primary px-3 py-2 text-sm font-medium transition-colors duration-200 hover-lift"
+                  >
+                    {item.name}
+                  </a>
+                ) : (
+                  <Link
+                    key={item.name}
+                    to={item.href}
+                    className="text-foreground hover:text-primary px-3 py-2 text-sm font-medium transition-colors duration-200 hover-lift"
+                  >
+                    {item.name}
+                  </Link>
+                )
               ))}
             </div>
           </div>
@@ -63,14 +77,25 @@ const Navigation = () => {
         <div className="md:hidden animate-slide-in">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-background border-b border-border">
             {navItems.map((item) => (
-              <a
-                key={item.name}
-                href={item.href}
-                className="text-foreground hover:text-primary block px-3 py-2 text-base font-medium transition-colors duration-200"
-                onClick={() => setIsOpen(false)}
-              >
-                {item.name}
-              </a>
+              item.isAnchor ? (
+                <a
+                  key={item.name}
+                  href={item.href}
+                  className="text-foreground hover:text-primary block px-3 py-2 text-base font-medium transition-colors duration-200"
+                  onClick={() => setIsOpen(false)}
+                >
+                  {item.name}
+                </a>
+              ) : (
+                <Link
+                  key={item.name}
+                  to={item.href}
+                  className="text-foreground hover:text-primary block px-3 py-2 text-base font-medium transition-colors duration-200"
+                  onClick={() => setIsOpen(false)}
+                >
+                  {item.name}
+                </Link>
+              )
             ))}
             <div className="pt-2">
               <Button variant="cta" size="sm" className="w-full">
